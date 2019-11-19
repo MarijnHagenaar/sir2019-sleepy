@@ -13,7 +13,7 @@ class DialogFlowSampleApplication(Base.AbstractApplication):
  
     def askQuestion(self, message):
         self.speechLock = Semaphore(0)
-        self.sayAnimated(question)
+        self.sayAnimated(message)
         self.speechLock.acquire()
 
     def askName(self):
