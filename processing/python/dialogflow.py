@@ -10,19 +10,16 @@ class DialogFlowSampleApplication(Base.AbstractApplication):
         # Dialogflow
         self.setDialogflowKey(keyfile)
         self.setDialogflowAgent(agent)
+        
+    def meetingRobot(self):
+        self.talk("Hello, I am Sleepy")
  
-    def askQuestion(self, message):
-        self.speechLock = Semaphore(0)
-        self.sayAnimated(message)
-        self.speechLock.acquire()
-
-    def askName(self):
+    def askingName(self):
         cloud_context   = 'answer_name'
         listen_timeout  = 5
         
-        self.askQuestion('Hello, what is your name?')
+        self.talk('what is your name?')
 
-        # Listen for an answer for at most 5 seconds
         self.name = None
         self.nameLock = Semaphore(0)
         self.setAudioContext(cloud_context)
@@ -37,11 +34,66 @@ class DialogFlowSampleApplication(Base.AbstractApplication):
             self.sayAnimated('Nice to meet you ' + self.name + '!')
         else:
             self.sayAnimated('Sorry, I didn\'t catch your name.')
+            self.askingName()
         self.speechLock.acquire()
 
-    def main(self):
-        self.askName()
+    def readStory(self):
+        cloud_context   = 'ask_read_story'
+        listen_timeout  = 5
+        
+        self.talk('Do you want me to read a story?')
+
+        self.read_story = None
+        self.read_storyLock = Semaphore(0)
+        self.setAudioContext(cloud_context)
+        self.startListening()
+        self.read_storyLock.acquire(timeout=listen_timeout)
+        self.stopListening()
+        if not self.read_story:  # wait one more second after stopListening (if needed)
+            self.read_storyLock.acquire(timeout=1)
  
+        # Respond and wait for that to finish
+        if self.read_story:
+            self.sayAnimated('Nice I will read a story.')
+        else:
+            self.sayAnimated('Sorry, I didn\'t catch your answer.')
+            self.readStory()
+        self.speechLock.acquire()
+        
+    def personalInterest(self):
+        cloud_context   = 'personal_interest'
+        listen_timeout  = 5
+        
+        self.talk('Do you like to play footbal?')
+
+        self.personal_story = None
+        self.personal_storyLock = Semaphore(0)
+        self.setAudioContext(cloud_context)
+        self.startListening()
+        self.read_storyLock.acquire(timeout=listen_timeout)
+        self.stopListening()
+        if not self.personal_story:  # wait one more second after stopListening (if needed)
+            self.personal_storyLock.acquire(timeout=1)
+ 
+        # Respond and wait for that to finish
+        if self.personal_story:
+            self.sayAnimated('ohh')
+        else:
+            self.sayAnimated('Sorry, I didn\'t understand.')
+            self.personalInterest()
+        self.speechLock.acquire()
+        
+    def main(self):
+        self.meetingRobot()
+        self.askingName()
+        self.readStory()
+        self.personalInterest()
+ 
+    def talk(self, message):
+        self.speechLock = Semaphore(0)
+        self.sayAnimated(message)
+        self.speechLock.acquire()
+        
     def onRobotEvent(self, event):
         if event == 'LanguageChanged':
             self.langLock.release()
@@ -56,7 +108,15 @@ class DialogFlowSampleApplication(Base.AbstractApplication):
         if intentName == 'answer_name' and len(args) > 0:
             self.name = args[0]
             self.nameLock.release()
- 
+            
+        if intentName == 'ask_read_story' and len(args) > 0:
+            self.read_story = args[0]
+            self.read_storyLock.release()
+            
+        if intentName == 'personal_interest' and len(args) > 0:
+            self.personal_story = args[0]
+            self.personal_storyLock.release()
+            
  
 # Run the application
 sample = DialogFlowSampleApplication("keyfile.json", "sleepy-gbdtuq")
