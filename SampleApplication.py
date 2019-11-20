@@ -1,11 +1,10 @@
 import AbstractApplication as Base
-
-
+import time
 class SampleApplication(Base.AbstractApplication):
     def main(self):
         self.setLanguage('en-US')
         self.sayAnimated('Hello, world!')
-        sleep(2)
+        # sleep(2)
 
     def onRobotEvent(self, event):
         print(event)
