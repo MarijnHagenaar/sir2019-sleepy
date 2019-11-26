@@ -1,0 +1,39 @@
+# Should match the dialogflow name
+name: read_story
+
+# Pre-talk (like asking the question)
+pre_talk: "I know a great story about animals. Would you like to hear a story?"
+pre_gesture: ""
+
+# Listen and lock timeout
+listen_timeout: 5
+lock_timeout: 1
+
+# Use [input] to replace the word Nao found
+# Use [dialogflow name] to replace the word with early recorded item
+# e.g. dialogflow intent is answer_name and this dialog is recorded as Mike
+# then [answer_name] will result in Mike
+# You can give more options.
+# First option that satisfies the regular expression, will be used.
+# match is in regular expression, (.?) means any character
+
+catch_success:
+  - option:
+    match: ^(yes)
+    true:
+       talk: "Lovely!"
+       goto: "pick_story"
+       gesture: ""
+  - option:
+    match: ^(no)
+    true:
+       talk: "Ah that is sad!"
+       goto: "pick_story"
+       gesture: ""
+
+catch_fail_recognize:
+  talk: "Sorry, I didn't catch your answer."
+  gesture: ""
+
+  max_tries: 3
+  max_tries_goto: "pick_story"
