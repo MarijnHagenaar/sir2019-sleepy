@@ -1,0 +1,50 @@
+# Should match the dialogflow name
+name: favorite_animal
+
+# Pre-talk (like asking the question)
+pre_talk: "I would like to get to know each other better. What is your favorite animal?"
+pre_gesture: ""
+
+# Listen and lock timeout
+listen_timeout: 5
+lock_timeout: 1
+
+# Use [input] to replace the word Nao found
+# Use [dialogflow name] to replace the word with early recorded item
+# e.g. dialogflow intent is answer_name and this dialog is recorded as Mike
+# then [answer_name] will result in Mike
+# You can give more options.
+# First option that satisfies the regular expression, will be used.
+# match is in regular expression, (.?) means any character
+
+catch_success:
+  - option:
+    # when gorilla
+    match: ^([Gg]orill.+)
+    true:
+       talk: "I like [input] too! "
+       goto: "read_story.yaml"
+       gesture: "gorilla/behavior_1"
+
+  - option:
+    # when fish
+    match: ^([Ff]is.+)
+    true:
+       talk: "Blup I am a fish"
+       goto: "read_story.yaml"
+       gesture: "vacuum/behavior_1"
+
+  - option:
+    # All others
+    match: (.?)
+    true:
+       talk: "I like [input] too"
+       goto: "read_story.yaml"
+       gesture: ""
+
+catch_fail_recognize:
+  talk: "Sorry, I didn't catch your answer."
+  gesture: ""
+
+  max_tries: 3
+  max_tries_goto: "read_story.yaml"
