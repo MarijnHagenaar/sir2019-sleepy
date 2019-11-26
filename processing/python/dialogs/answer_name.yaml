@@ -1,0 +1,30 @@
+# Should match the dialogflow name
+name: ask_read_story
+
+
+# Pre-talk (like asking the question)
+pre_talk: "Do you want me to read a story?"
+
+
+# Listen and lock timeout
+listen_timeout: 5
+lock_timeout: 1
+
+
+# Nao didn't catch the question
+input_none: "Sorry, I didn't catch your answer."
+input_max_tries: 3
+input_max_goto: "favourite_animal.yaml"
+
+
+# Nao understand the question.
+# Use {{ catch }} to represent the variable he found
+
+input_success:
+ match: ^(yes)
+ true:
+   goto: "something"
+   return: "Oh nice, I will read a story"
+ false:
+   goto: "answer_name.yaml"
+   return: "I also don't like stories"
