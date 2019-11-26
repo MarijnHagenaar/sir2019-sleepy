@@ -1,0 +1,32 @@
+# Should match the dialogflow name
+name: answer_name
+
+# Pre-talk (like asking the question)
+pre_talk: "Hi, I am Sleepy. What is your name?"
+pre_gesture: "Enthusiastic_4"
+
+# Listen and lock timeout
+listen_timeout: 5
+lock_timeout: 1
+
+
+# Nao didn't catch the question
+input_none: "Sorry, I didn't catch your answer."
+input_max_tries: 3
+
+# yaml file (end with yaml extension) or functionname
+input_max_goto: "favourite_animal.yaml"
+
+# Nao understand the question.
+# Use {{ catch }} to represent the variable he found
+
+input_success:
+ match: ^(yes)
+ true:
+   return: "Oh nice, I will read a story"
+   goto: "read_story.yaml"
+   gesture: "Enthusiastic_4"
+ false:
+   return: "I also don't like stories"
+   goto: "favourite_animal.yaml"
+   gesture: "Enthusiastic_4"
