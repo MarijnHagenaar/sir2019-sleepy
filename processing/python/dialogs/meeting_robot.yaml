@@ -3,30 +3,31 @@ name: answer_name
 
 # Pre-talk (like asking the question)
 pre_talk: "Hi, I am Sleepy. What is your name?"
-pre_gesture: "Enthusiastic_4"
+pre_gesture: ""
 
 # Listen and lock timeout
 listen_timeout: 5
 lock_timeout: 1
 
+# Use [input] to replace the word Nao found
+# Use [dialogflow name] to replace the word with early recorded item
+# e.g. dialogflow intent is answer_name and this dialog is recorded as Mike
+# then [answer_name] will result in Mike
+# You can give more options.
+# First option that satisfies the regular expression, will be used.
+# match is in regular expression, (.?) means any character
 
-# Nao didn't catch the question
-input_none: "Sorry, I didn't catch your answer."
-input_max_tries: 3
+catch_success:
+  - option:
+    match: (.?)
+    true:
+       talk: "Nice to meet you [input]"
+       goto: "favourite_animal.yaml"
+       gesture: ""
 
-# yaml file (end with yaml extension) or functionname
-input_max_goto: "favourite_animal.yaml"
+catch_fail_recognize:
+  talk: "Sorry, I didn't catch your answer."
+  gesture: ""
 
-# Nao understand the question.
-# Use {{ catch }} to represent the variable he found
-
-input_success:
- match: (.?)
- true:
-   return: "Oh nice, I will read a story"
-   goto: "read_story.yaml"
-   gesture: "gorilla/behavior_1"
- false:
-   return: "I also don't like stories"
-   goto: "read_story.yaml"
-   gesture: "gorilla/behavior_1"
+  max_tries: 3
+  max_tries_goto: "favourite_animal.yaml"
