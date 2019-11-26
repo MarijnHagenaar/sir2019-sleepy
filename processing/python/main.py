@@ -1,3 +1,17 @@
+#!/usr/bin/env python3
+
+"""
+Socially Intelligent Robotics
+"""
+
+__author__     = 'Ersin Topuz'
+__copyright__  = 'Copyright 2019'
+__license__    = 'MIT'
+__version__    = '0.0.1'
+__maintainer__ = 'Ersin, Zeynep, Tomer, Oktay, Marijn and Erkin'
+__email__      = 'ersin@hotmail.nl'
+__status__     = 'Development'
+
 import yaml
 import re
 import os
@@ -89,7 +103,11 @@ class DialogFlowSampleApplication(Base.AbstractApplication):
                             self.play_gesture(catch_success[True]["gesture"])
 
                             # Talk
-                            self.talk(subs_words(catch_success[True]["talk"], robot_input))
+                            sub = subs_words(catch_success[True]["talk"], robot_input)
+                            for words in DialogFlowSampleApplication.dialog_answers:
+                                sub = subs_words(sub, DialogFlowSampleApplication.dialog_answers[words], rule='\[[ ]?'+words+'[ ]?\]')
+
+                            self.talk(sub)
 
                             # Go To next dialog or call a method
                             print(self.get_goto(catch_success[True]["gesture"]))
