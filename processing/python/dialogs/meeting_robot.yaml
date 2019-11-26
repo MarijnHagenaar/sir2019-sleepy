@@ -21,12 +21,12 @@ input_max_goto: "favourite_animal.yaml"
 # Use {{ catch }} to represent the variable he found
 
 input_success:
- match: ^(yes)
+ match: (.?)
  true:
    return: "Oh nice, I will read a story"
    goto: "read_story.yaml"
-   gesture: "Enthusiastic_4"
+   gesture: "gorilla/behavior_1"
  false:
    return: "I also don't like stories"
-   goto: "favourite_animal.yaml"
-   gesture: "Enthusiastic_4"
+   goto: "read_story.yaml"
+   gesture: "gorilla/behavior_1"
